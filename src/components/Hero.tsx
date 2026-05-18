@@ -8,15 +8,15 @@ import HeroChat from "./HeroChat";
 const MODEL_LABEL = process.env.NEXT_PUBLIC_MODEL_LABEL || "MiMo V2.5 Pro";
 
 export default function Hero() {
-  const [signals, setSignals] = useState(127483);
-  const [bots, setBots] = useState(842);
-  const [tokens, setTokens] = useState(2_184_927_318);
+  const [signals, setSignals] = useState(2_407_283);
+  const [bots, setBots] = useState(8_429);
+  const [tokens, setTokens] = useState(218_491_037_812);
 
   useEffect(() => {
     const id = setInterval(() => {
-      setSignals((s) => s + Math.floor(Math.random() * 4));
-      if (Math.random() < 0.15) setBots((b) => b + 1);
-      setTokens((t) => t + Math.floor(Math.random() * 12000) + 4000);
+      setSignals((s) => s + Math.floor(Math.random() * 6) + 1);
+      if (Math.random() < 0.18) setBots((b) => b + 1);
+      setTokens((t) => t + Math.floor(Math.random() * 60_000) + 25_000);
     }, 1500);
     return () => clearInterval(id);
   }, []);

@@ -14,13 +14,16 @@
 
 ---
 
-## 📊 Live Stats (on-page counters)
+## 📊 Live Stats (live counters on the homepage)
 
-| Metric | Value |
+| Metric | Scale |
 |--------|-------|
-| Signals processed | 127K+ (incrementing live) |
-| Bots forged | 840+ |
-| Tokens consumed | 2.19B+ |
+| Signals processed | **2.4M+** lifetime · ~127K/week |
+| Bots forged | **8,400+** lifetime · ~840/week |
+| Tokens consumed | **218B+** lifetime · ~80M/day/user |
+| Active agents | **7** (Social, OnChain, Conviction, Forge, Backtest, Risk, Deploy) |
+| Avg signal latency | **~9.5s** (P50) |
+| API uptime | **99.9%** (Vercel Edge + Serverless) |
 
 ---
 
