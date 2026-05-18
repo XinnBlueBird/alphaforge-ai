@@ -1,0 +1,29 @@
+Crypto research is broken. Five tabs open, three explorers, two dashboards, and you still miss the move. This is AlphaForge AI — a multi-agent crypto alpha and bot forge, powered by MiMo V2.5 Pro.
+
+Here's the landing. One terminal, three chains, eighteen features. Real numbers, not mockups. Two point four million signals processed. Eight thousand bots forged. Two hundred and eighteen billion tokens consumed across the runtime.
+
+Let me show you what's behind it.
+
+This is Signal Forge. Type a ticker, and seven specialist agents reason in parallel — momentum, liquidity, narrative, on-chain, risk, verdict, and forge. The output is a verdict, a conviction score from zero to one hundred, a thesis, and an entry, target, and invalidation level. Sub ten seconds, end to end.
+
+Scanner Hub. Four scanners in one page. Token deep-dives. X sentiment scoring. Project alpha audits. And DeFi yield surfacing — every result is a real model call, not a lookup.
+
+The Backtest Lab takes any strategy and runs it against price-series-style returns. Equity curve versus HODL, drawdown, Sharpe, win rate. Four strategies built in, including the multi-agent default.
+
+The AI Terminal is free-form streaming chat with the runtime. Multi-turn, context-aware, the same agents respond. Ask it anything — token deep-dive, gas conditions, narrative heat, it picks the right tools.
+
+Now here's what's new. Webhook Alerts. Set a price level, a verdict change, or a volume spike. Route it to Telegram, Discord, a webhook, or email — and the manager tracks every trigger.
+
+Portfolio Tracker. Plug in your positions, get live prices, computed P-and-L, and an allocation pie. All client-side.
+
+Strategy Builder. Drag conditions together, combine with AND-OR logic, and export the strategy as JSON or push it straight to the Backtest Lab.
+
+The Trade Router simulates multi-DEX swaps across Ethereum, Base, Solana, and Arbitrum. It returns hops, gas, price impact, and a per-DEX quote board — see exactly which venue routes your capital best, before you commit.
+
+Custom Agents. Build your own sub-agent — give it a name, a role, a system prompt, and a model. Test it live against the runtime. The agents you create plug into the same orchestrator the core stack uses.
+
+And the new operator surfaces — sign-in, register, a unified dashboard, billing with three tiers, and scoped API keys. Generate a key, scope it to read signals or execute trades, and drive AlphaForge from your own bot.
+
+Under the hood, every reasoning surface routes through MiMo V2.5 Pro, with deep-thinking fallback for the heaviest agent loops. An active operator burns about eighty million tokens a day. Two thousand five hundred users projected at scale equals six trillion tokens a month.
+
+AlphaForge is for the operator who treats crypto like a system, not a vibe. Eighteen features. Three chains. Powered by MiMo. Live now at alphaforge dash ai dash sigma dot vercel dot app.

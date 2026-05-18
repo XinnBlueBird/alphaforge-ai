@@ -15,9 +15,9 @@ type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 export async function POST(req: NextRequest) {
   const { messages } = (await req.json()) as { messages: ChatMessage[] };
 
-  const apiBase = process.env.MIMO_API_BASE || "https://api.freemodel.dev/v1";
-  const apiKey = process.env.FREEMODEL_API_KEY || process.env.MIMO_API_KEY;
-  const model = process.env.MIMO_MODEL || "mimo/mimo-v2.5-pro";
+  const apiBase = process.env.MIMO_API_BASE || "https://api.xiaomimimo.com/v1";
+  const apiKey = process.env.MIMO_API_KEY || process.env.FREEMODEL_API_KEY;
+  const model = process.env.MIMO_MODEL || "mimo-v2.5-pro";
 
   if (!apiKey) {
     return new Response(
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${apiKey}`,
+      "api-key": apiKey,
     },
     body: JSON.stringify(payload),
   });

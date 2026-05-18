@@ -44,14 +44,14 @@ export async function POST(req: NextRequest) {
   const intent = (body.intent || "").trim().slice(0, 1000);
   if (!intent) return json({ error: "intent required" }, 400);
 
-  const apiBase = process.env.MIMO_API_BASE || "https://api.freemodel.dev/v1";
-  const apiKey = process.env.FREEMODEL_API_KEY || process.env.MIMO_API_KEY;
-  const model = process.env.SIGNAL_MODEL || process.env.MIMO_MODEL || "claude-opus-4-7";
+  const apiBase = process.env.MIMO_API_BASE || "https://api.xiaomimimo.com/v1";
+  const apiKey = process.env.MIMO_API_KEY || process.env.FREEMODEL_API_KEY;
+  const model = process.env.SIGNAL_MODEL || process.env.MIMO_MODEL || "mimo-v2.5-pro";
   if (!apiKey) return json({ error: "API key not configured" }, 500);
 
   const upstream = await fetch(`${apiBase}/chat/completions`, {
     method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
+    headers: { "content-type": "application/json", "api-key": apiKey },
     body: JSON.stringify({
       model,
       temperature: 0.3,

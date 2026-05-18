@@ -1,0 +1,109 @@
+[
+  {
+    "id": "01_hero",
+    "path": "/",
+    "label": "Landing hero",
+    "text": "Crypto research is broken. Five tabs open, three explorers, two dashboards, and you still miss the move. This is AlphaForge AI — a multi-agent crypto alpha and bot forge, powered by MiMo V2.5 Pro.",
+    "action": "scroll_tour"
+  },
+  {
+    "id": "02_stats",
+    "path": "/",
+    "label": "Live stats",
+    "text": "One terminal. Three chains. Eighteen features. Real numbers, not mockups. Two point four million signals processed. Eight thousand bots forged. Two hundred eighteen billion tokens consumed across the runtime.",
+    "action": "scroll_stats"
+  },
+  {
+    "id": "03_forge",
+    "path": "/forge",
+    "label": "Signal Forge",
+    "text": "This is Signal Forge. Type a ticker, and seven specialist agents reason in parallel — momentum, liquidity, narrative, on-chain, risk, verdict, and forge. The output is a verdict, a conviction score from zero to one hundred, a thesis, and an entry, target, and invalidation level.",
+    "action": "type_and_submit",
+    "type_text": "SOL"
+  },
+  {
+    "id": "04_scan",
+    "path": "/scan",
+    "label": "Scanner Hub",
+    "text": "Scanner Hub. Four scanners in one page. Token deep-dives. X sentiment scoring. Project alpha audits. And DeFi yield surfacing. Every result is a real model call, not a lookup.",
+    "action": "tab_tour"
+  },
+  {
+    "id": "05_lab",
+    "path": "/lab",
+    "label": "Backtest Lab",
+    "text": "The Backtest Lab takes any strategy and runs it against price-series-style returns. Equity curve versus HODL. Drawdown. Sharpe. Win rate. Four strategies built in, including the multi-agent default.",
+    "action": "click_run"
+  },
+  {
+    "id": "06_terminal",
+    "path": "/terminal",
+    "label": "AI Terminal",
+    "text": "The AI Terminal is free-form streaming chat with the runtime. Multi-turn, context-aware. The same agents respond. Ask it anything — token deep-dive, gas conditions, narrative heat — it picks the right tools and streams the answer back.",
+    "action": "type_terminal",
+    "type_text": "Give me a deep-dive on JUP narrative heat"
+  },
+  {
+    "id": "07_alerts",
+    "path": "/alerts",
+    "label": "Webhook Alerts",
+    "text": "Webhook Alerts. Set a price level, a verdict change, or a volume spike. Route it to Telegram, Discord, a webhook, or email. The manager tracks every trigger and gives you a full audit trail.",
+    "action": "scroll_show"
+  },
+  {
+    "id": "08_portfolio",
+    "path": "/portfolio",
+    "label": "Portfolio Tracker",
+    "text": "Portfolio Tracker. Plug in your positions, get live prices, computed profit and loss, and an allocation pie. All client-side. No account, no key, no data leaving the browser.",
+    "action": "scroll_show"
+  },
+  {
+    "id": "09_builder",
+    "path": "/builder",
+    "label": "Strategy Builder",
+    "text": "Strategy Builder. Drag conditions together. Combine with AND-OR logic. Export the strategy as JSON or push it straight to the Backtest Lab. Plain English in, executable workflow out.",
+    "action": "click_compose"
+  },
+  {
+    "id": "10_trade",
+    "path": "/trade",
+    "label": "Trade Router",
+    "text": "The Trade Router simulates multi-DEX swaps across Ethereum, Base, Solana, and Arbitrum. It returns hops, gas, price impact, and a per-DEX quote board. See exactly which venue routes your capital best, before you commit.",
+    "action": "click_simulate"
+  },
+  {
+    "id": "11_agents",
+    "path": "/custom-agents",
+    "label": "Custom Agents",
+    "text": "Custom Agents. Build your own sub-agent. Give it a name, a role, a system prompt, and a model. Test it live against the runtime. The agents you create plug into the same orchestrator the core stack uses.",
+    "action": "scroll_show"
+  },
+  {
+    "id": "12_dashboard",
+    "path": "/dashboard",
+    "label": "Dashboard",
+    "text": "Operator surfaces. Sign-in, register, and a unified dashboard. Credits, active agents, signals in the last twenty-four hours, and a full activity feed. One pane of glass for everything you operate.",
+    "action": "scroll_show"
+  },
+  {
+    "id": "13_billing",
+    "path": "/billing",
+    "label": "Billing",
+    "text": "Billing. Three tiers — Free, Pro, and Team. Invoice history. Real plan switching. The whole monetization layer is wired and ready for Stripe to drop in.",
+    "action": "scroll_show"
+  },
+  {
+    "id": "14_keys",
+    "path": "/api-keys",
+    "label": "API Keys",
+    "text": "And scoped API keys. Generate a key, scope it to read signals or execute trades, reveal it once, revoke it any time. Drive AlphaForge from your own bot, your own backend, your own pipeline.",
+    "action": "scroll_show"
+  },
+  {
+    "id": "15_close",
+    "path": "/",
+    "label": "Close",
+    "text": "Under the hood, every reasoning surface routes through MiMo V2.5 Pro. An active operator burns about eighty million tokens a day. AlphaForge is for the operator who treats crypto like a system, not a vibe. Powered by MiMo. Live now at alphaforge dash ai dash sigma dot vercel dot app.",
+    "action": "scroll_tour"
+  }
+]

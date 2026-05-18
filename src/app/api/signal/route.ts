@@ -43,9 +43,9 @@ export async function POST(req: NextRequest) {
   const symbol = (body.symbol || "").trim().slice(0, 64);
   if (!symbol) return json({ error: "symbol required" }, 400);
 
-  const apiBase = process.env.MIMO_API_BASE || "https://api.freemodel.dev/v1";
-  const apiKey = process.env.FREEMODEL_API_KEY || process.env.MIMO_API_KEY;
-  const model = process.env.SIGNAL_MODEL || process.env.MIMO_MODEL || "claude-opus-4-7";
+  const apiBase = process.env.MIMO_API_BASE || "https://api.xiaomimimo.com/v1";
+  const apiKey = process.env.MIMO_API_KEY || process.env.FREEMODEL_API_KEY;
+  const model = process.env.SIGNAL_MODEL || process.env.MIMO_MODEL || "mimo-v2.5-pro";
 
   if (!apiKey) return json({ error: "API key not configured" }, 500);
 
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${apiKey}`,
+      "api-key": apiKey,
     },
     body: JSON.stringify(payload),
   });
