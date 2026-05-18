@@ -7,6 +7,7 @@
   <a href="https://nextjs.org/"><img alt="Next.js 14" src="https://img.shields.io/badge/Next.js-14-000?style=for-the-badge&logo=nextdotjs" /></a>
   <a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=for-the-badge&logo=typescript&logoColor=white" /></a>
   <a href="https://vercel.com"><img alt="Vercel" src="https://img.shields.io/badge/Deployed-Vercel-000?style=for-the-badge&logo=vercel" /></a>
+  <img alt="Version" src="https://img.shields.io/badge/version-v1.0-a855f7?style=for-the-badge" />
   <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" />
 </p>
 
@@ -31,6 +32,8 @@
 
 AlphaForge isn't another landing page — every feature hits a real backend endpoint:
 
+### Core research & signals
+
 | Feature | What it does | Route / API |
 |---|---|---|
 | 🎯 **Signal Forge** | Multi-agent verdict, conviction 0-100, thesis, entry/target/invalidation, per-agent scoreboard | `/forge` · `POST /api/signal` |
@@ -42,7 +45,32 @@ AlphaForge isn't another landing page — every feature hits a real backend endp
 | 📊 **Market** | Live CoinGecko prices, 24h/7d change, sparklines, auto-refresh 30s | `/market` · `GET /api/market` |
 | ⭐ **Watchlist** | localStorage persistence, add/remove tickers, quick-load on Forge | `/forge` sidebar |
 | 🔀 **Compare Mode** | 3 signals side-by-side, parallel fetch, mini agent bars | `/forge` bottom |
-| 💳 **Pricing + FAQ** | 3-tier plans, accordion FAQ (English) | `/` |
+
+### Operator surfaces (v0.7)
+
+| Feature | What it does | Route / API |
+|---|---|---|
+| 🔔 **Webhook Alerts** | Real-time alert manager — price above/below, verdict change, volume spike. Route to Telegram, Discord, webhook, or email | `/alerts` · `GET/POST/DELETE /api/alerts` |
+| 💼 **Portfolio Tracker** | Track crypto positions with live prices. P&L, allocation pie, per-position breakdown — stored locally, no account required | `/portfolio` |
+| 📨 **Telegram Sink** | Production-ready Bot API shape — chat_id + message → MarkdownV2 sendMessage | `POST /api/telegram` |
+
+### Builder surfaces (v0.8)
+
+| Feature | What it does | Route / API |
+|---|---|---|
+| 🛠️ **Strategy Builder** | Visual composer — drag conditions, set parameters, AND/OR logic. Export as JSON or send to Backtest Lab | `/builder` |
+| 🛣️ **Trade Router** | Multi-DEX swap simulator across 4 chains (ETH, Base, Solana, Arbitrum). Hops, gas, price impact, ETA, all-DEX quote board | `/trade` · `POST /api/route-trade` |
+| 🤖 **Custom Agents** | User-defined sub-agents — name, role, system prompt, model, color. Live test against the runtime | `/custom-agents` |
+
+### Account & monetization (v1.0)
+
+| Feature | What it does | Route |
+|---|---|---|
+| 🔐 **Sign in / Register** | Email + password, GitHub, or wallet. Local session for the demo | `/login` · `/register` |
+| 🧭 **Dashboard** | Account overview — credits, active agents, 24h signals, quick links, activity feed | `/dashboard` |
+| 💳 **Billing** | 3-tier plans (Free / Pro / Team), invoice history, simulated upgrades | `/billing` |
+| 🔑 **API Keys** | Scoped key generator (`read:signals`, `write:agents`, `read:portfolio`, `execute:trade`), reveal/revoke, quick-start curl | `/api-keys` |
+| 💰 **Pricing + FAQ** | 3-tier plans, accordion FAQ (English) | `/` |
 | 📖 **API Docs** | Full reference with curl examples | `/docs` |
 
 ---
@@ -80,6 +108,8 @@ AlphaForge isn't another landing page — every feature hits a real backend endp
 
 All five sub-agents reason in parallel inside a single model call (MiMo V2.5 Pro), then the verdict synthesizer aggregates scores and writes the thesis. Sub-second to ~10s wall-clock per signal depending on model load.
 
+User-defined sub-agents (via `/custom-agents`) plug into the same runtime with their own system prompts and model preferences.
+
 ---
 
 ## 🚀 Quick start
@@ -110,6 +140,7 @@ npm run dev
 | `MIMO_MODEL` | Model for `/api/chat` | `mimo/mimo-v2.5-pro` |
 | `SIGNAL_MODEL` | Override model for `/api/signal` + `/api/scan` + `/api/compose` | `claude-opus-4-7` |
 | `NEXT_PUBLIC_MODEL_LABEL` | Badge text on UI | `MiMo V2.5 Pro` |
+| `TELEGRAM_BOT_TOKEN` | Optional — wires `/api/telegram` to real Bot API | unset (mock mode) |
 
 Any OpenAI-compatible endpoint works — FreeModel, OpenRouter, self-hosted vLLM, etc.
 
@@ -185,6 +216,36 @@ curl -X POST https://alphaforge-ai-sigma.vercel.app/api/compose \
 
 SSE streaming chat with the agent runtime. OpenAI-compatible message format.
 
+### `GET /api/alerts` · `POST /api/alerts` · `DELETE /api/alerts?id=...`
+
+In-memory alert CRUD. List, create, or revoke alert rules.
+
+```bash
+curl -X POST https://alphaforge-ai-sigma.vercel.app/api/alerts \
+  -H "content-type: application/json" \
+  -d '{"symbol":"BTC","condition":"price_above","threshold":120000,"channel":"telegram","target":"@me"}'
+```
+
+### `POST /api/telegram`
+
+Mock Telegram alert sender — production wires `process.env.TELEGRAM_BOT_TOKEN` to `api.telegram.org/bot<TOKEN>/sendMessage`.
+
+```bash
+curl -X POST https://alphaforge-ai-sigma.vercel.app/api/telegram \
+  -H "content-type: application/json" \
+  -d '{"chat_id":"@xinnsky","message":"BTC crossed $120K"}'
+```
+
+### `POST /api/route-trade`
+
+Deterministic seeded multi-DEX route simulator. Returns hops, gas, price impact, ETA, and per-DEX quote board.
+
+```bash
+curl -X POST https://alphaforge-ai-sigma.vercel.app/api/route-trade \
+  -H "content-type: application/json" \
+  -d '{"from_token":"USDC","to_token":"WETH","amount":1000,"chain":"ethereum","slippage_bps":50}'
+```
+
 ---
 
 ## 🗺️ Roadmap
@@ -194,10 +255,12 @@ SSE streaming chat with the agent runtime. OpenAI-compatible message format.
 - [x] v0.3 — live signal engine + market data + backtest simulator
 - [x] v0.4 — multi-page restructure + streaming hero chat + agents console + composer
 - [x] v0.5 — logo + watchlist + signal history + compare mode
-- [x] **v0.6 — AI terminal page + scanner hub (Token/X/Project/DeFi)** ← *you are here*
-- [ ] v0.7 — webhook alerts, portfolio tracking, Telegram integration
-- [ ] v0.8 — strategy builder UI, custom agents, on-chain trade routing
-- [ ] v1.0 — multi-tenant, API tokens, dashboard, billing
+- [x] v0.6 — AI terminal page + scanner hub (Token/X/Project/DeFi)
+- [x] v0.7 — webhook alerts, portfolio tracking, Telegram integration
+- [x] v0.8 — strategy builder UI, custom agents, on-chain trade routing
+- [x] **v1.0 — multi-tenant auth, dashboard, billing, scoped API keys** ← *you are here*
+- [ ] v1.1 — real wallet sign-in (SIWE / Solana sign-in), Stripe billing wiring
+- [ ] v1.2 — Postgres-backed alerts + agents (replace in-memory store), team seats
 
 ---
 
@@ -216,6 +279,8 @@ git push origin feat/your-feature
 ## ⚠️ Disclaimer
 
 AlphaForge AI generates research output. **It is not financial advice.** Trading crypto carries substantial risk. DYOR, size your positions responsibly, and never deploy capital you can't afford to lose. The maintainers accept no liability for trading outcomes.
+
+The auth, billing, and API-key surfaces are demo flows — sessions, plans, and keys live in the browser's localStorage and are not real credentials.
 
 ---
 
