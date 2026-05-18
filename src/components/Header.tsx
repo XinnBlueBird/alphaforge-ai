@@ -8,12 +8,12 @@ import { Menu, X } from "lucide-react";
 const NAV = [
   { href: "/forge", label: "Forge" },
   { href: "/scan", label: "Scan" },
-  { href: "/lab", label: "Backtest" },
   { href: "/agents", label: "Agents" },
-  { href: "/market", label: "Market" },
-  { href: "/composer", label: "Composer" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/alerts", label: "Alerts" },
+  { href: "/builder", label: "Builder" },
+  { href: "/trade", label: "Trade" },
   { href: "/terminal", label: "Terminal" },
-  { href: "/docs", label: "Docs" },
 ];
 
 export default function Header() {
@@ -29,7 +29,7 @@ export default function Header() {
             alphaforge<span className="text-fuchsia-400">.ai</span>
           </span>
           <span className="ml-1 hidden rounded border border-zinc-700 bg-zinc-900/60 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-zinc-400 sm:inline-block">
-            v0.4
+            v1.0
           </span>
         </Link>
 
@@ -53,19 +53,23 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <a
-            href="https://github.com/XinnBlueBird/alphaforge-ai"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-md border border-zinc-700 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
-          >
-            ★ Star
-          </a>
           <Link
-            href="/forge"
+            href="/login"
+            className="rounded-md px-2 py-1.5 text-xs text-zinc-400 hover:text-white"
+          >
+            Sign in
+          </Link>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="/register"
             className="rounded-md bg-fuchsia-500 px-3 py-1.5 text-xs font-medium text-black hover:bg-fuchsia-400"
           >
-            Try Forge →
+            Get started
           </Link>
         </div>
 
