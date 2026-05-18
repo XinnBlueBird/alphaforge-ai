@@ -1,21 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Send, Sparkles, Trash2, Loader2 } from "lucide-react";
+import { Send, Trash2, Loader2, Terminal as TerminalIcon, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MODEL_LABEL = process.env.NEXT_PUBLIC_MODEL_LABEL || "MiMo V2.5 Pro";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const PROMPTS = [
-  "What's a high-conviction setup right now on SOL?",
-  "Generate a momentum bot for ETH on Base, output Python",
-  "Walk me through your multi-agent scoring",
-  "Describe an ideal entry for ARB this week",
+const QUICK = [
+  "Scan token SOL — full alpha breakdown",
+  "Audit contract 0x71fc7… on Base",
+  "Generate momentum bot for ETH (Python)",
+  "What's trending on X right now in DeFi?",
+  "Find new project alpha — last 24h",
+  "Wallet trace 7KY2et…wT9 on Solana",
 ];
 
-export default function HeroChat() {
+export default function FullTerminal() {
   const [history, setHistory] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -58,14 +60,17 @@ export default function HeroChat() {
       let buffer = "";
       let assistantText = "";
 
-      // Pace tokens to be visibly typed
+      // Visible per-char streaming queue. Token-level chunks from upstream
+      // arrive in bursts; we pace them to ~16ms/char for a real typing effect.
       let queue = "";
       let pumping = false;
+
       const pump = () => {
         if (pumping) return;
         pumping = true;
         const tick = () => {
           if (queue.length === 0) { pumping = false; return; }
+          // Drain in small chunks per frame so React sees real updates
           const take = Math.min(2, queue.length);
           assistantText += queue.slice(0, take);
           queue = queue.slice(take);
@@ -104,12 +109,11 @@ export default function HeroChat() {
               queue += delta;
               pump();
             }
-          } catch {
-            /* ignore */
-          }
+          } catch { /* ignore */ }
         }
       }
 
+      // Drain any remaining queue when stream ends
       if (queue.length > 0) {
         assistantText += queue;
         queue = "";
@@ -141,61 +145,65 @@ export default function HeroChat() {
   }
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-950/90 to-zinc-900/60 backdrop-blur shadow-2xl shadow-fuchsia-500/5 overflow-hidden">
-      <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-950/50 px-4 py-2.5">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-          <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">
-            alphaforge.agent · live
+    <div className="flex h-[calc(100vh-72px)] flex-col">
+      {/* Top bar */}
+      <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-950/60 px-5 py-3 backdrop-blur">
+        <div className="flex items-center gap-3">
+          <div className="inline-flex items-center gap-2">
+            <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-300">
+              alphaforge.terminal · live
+            </span>
+          </div>
+          <span className="rounded border border-zinc-700 bg-zinc-900/60 px-2 py-0.5 text-[10px] font-mono text-zinc-400">
+            {MODEL_LABEL}
           </span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-[11px] font-mono text-zinc-500">{MODEL_LABEL}</span>
-          {history.length > 0 && (
-            <button
-              onClick={() => { setHistory([]); setError(null); }}
-              className="text-zinc-500 hover:text-zinc-200"
-              aria-label="Clear chat"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div ref={scrollRef} className="max-h-[420px] min-h-[280px] overflow-y-auto px-5 py-5 space-y-4">
-        {history.length === 0 ? (
-          <EmptyState onPick={(p) => send(p)} />
-        ) : (
-          history.map((m, i) => <Bubble key={i} msg={m} streaming={streaming && i === history.length - 1} />)
+        {history.length > 0 && (
+          <button
+            onClick={() => { setHistory([]); setError(null); }}
+            className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900/60 px-2.5 py-1 text-xs text-zinc-300 hover:bg-zinc-800"
+          >
+            <Trash2 className="h-3 w-3" /> Clear
+          </button>
         )}
       </div>
 
+      {/* Conversation */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-6 sm:px-8">
+        <div className="mx-auto max-w-3xl space-y-4">
+          {history.length === 0 ? <Welcome onPick={send} /> : history.map((m, i) => (
+            <Bubble key={i} msg={m} streaming={streaming && i === history.length - 1} />
+          ))}
+        </div>
+      </div>
+
       {error && (
-        <div className="border-t border-rose-500/20 bg-rose-500/5 px-4 py-2 text-xs text-rose-300">
+        <div className="border-t border-rose-500/20 bg-rose-500/5 px-5 py-2 text-xs text-rose-300">
           {error}
         </div>
       )}
 
-      <div className="border-t border-zinc-800 bg-zinc-950/50 p-3">
-        <div className="flex items-end gap-2">
+      {/* Input */}
+      <div className="border-t border-zinc-800 bg-zinc-950/80 p-3 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-end gap-2">
           <textarea
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKey}
-            placeholder="Ask the agent — ticker, setup, or natural language…"
+            placeholder="Scan a token, audit a contract, draft a bot, ask anything…"
             rows={1}
-            className="flex-1 resize-none rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-fuchsia-500/40 focus:outline-none"
-            maxLength={2000}
+            className="flex-1 resize-none rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-fuchsia-500/40 focus:outline-none"
+            maxLength={3000}
           />
           <button
             onClick={() => send(input)}
             disabled={!input.trim() || streaming}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-fuchsia-500 px-4 py-2 text-sm font-medium text-black transition hover:bg-fuchsia-400 disabled:opacity-40"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-fuchsia-500 px-4 py-2.5 text-sm font-medium text-black transition hover:bg-fuchsia-400 disabled:opacity-40"
           >
             {streaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            {streaming ? "…" : "Send"}
+            {streaming ? "" : "Send"}
           </button>
         </div>
       </div>
@@ -203,21 +211,30 @@ export default function HeroChat() {
   );
 }
 
-function EmptyState({ onPick }: { onPick: (p: string) => void }) {
+function Welcome({ onPick }: { onPick: (p: string) => void }) {
   return (
-    <div className="flex flex-col items-start gap-3 py-2">
-      <div className="flex items-center gap-2 text-xs text-zinc-500">
-        <Sparkles className="h-3.5 w-3.5 text-fuchsia-400" />
-        Try one of these
+    <div className="flex flex-col gap-6 py-8">
+      <div className="text-center">
+        <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-3 py-1 text-xs text-fuchsia-300">
+          <TerminalIcon className="h-3 w-3" /> AI Terminal
+        </div>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
+          What do you want to forge today?
+        </h1>
+        <p className="mt-2 text-sm text-zinc-500">
+          A full multi-agent terminal. Ask anything — token alpha, contract audit, bot scaffolds, market reads.
+        </p>
       </div>
-      <div className="grid w-full gap-2 sm:grid-cols-2">
-        {PROMPTS.map((p, i) => (
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        {QUICK.map((q, i) => (
           <button
             key={i}
-            onClick={() => onPick(p)}
-            className="rounded-lg border border-zinc-800 bg-zinc-900/40 px-3 py-2.5 text-left text-sm text-zinc-300 hover:border-fuchsia-500/30 hover:bg-zinc-900/60 hover:text-white transition"
+            onClick={() => onPick(q)}
+            className="group flex items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950/60 p-4 text-left text-sm text-zinc-300 transition hover:border-fuchsia-500/30 hover:bg-zinc-900/60 hover:text-white"
           >
-            <span className="text-fuchsia-400">›</span> {p}
+            <Sparkles className="h-3.5 w-3.5 flex-shrink-0 text-fuchsia-400" />
+            <span>{q}</span>
           </button>
         ))}
       </div>
@@ -246,19 +263,12 @@ function Bubble({ msg, streaming }: { msg: Msg; streaming: boolean }) {
         )}
         {streaming && !isUser && msg.content.length === 0 && (
           <span className="inline-flex gap-1">
-            <Dot d={0} /><Dot d={120} /><Dot d={240} />
+            <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-fuchsia-400" />
+            <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-fuchsia-400" style={{ animationDelay: "120ms" }} />
+            <span className="inline-block h-1.5 w-1.5 animate-bounce rounded-full bg-fuchsia-400" style={{ animationDelay: "240ms" }} />
           </span>
         )}
       </div>
     </motion.div>
-  );
-}
-
-function Dot({ d }: { d: number }) {
-  return (
-    <span
-      className="inline-block h-1.5 w-1.5 rounded-full bg-fuchsia-400"
-      style={{ animation: `pulse 1.2s ${d}ms infinite ease-in-out` }}
-    />
   );
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Sparkles, FlaskConical, Cpu, TrendingUp, Wand2, BookOpen,
-  ArrowRight,
+  Search, Terminal as TerminalIcon, ArrowRight,
 } from "lucide-react";
 
 const FEATURES = [
@@ -14,6 +14,22 @@ const FEATURES = [
     label: "Signal Forge",
     title: "Multi-agent crypto signals",
     desc: "Verdict + conviction + thesis with entry, target, invalidation. Five agents score in parallel; the verdict synthesizer writes the trade memo.",
+    accent: "fuchsia",
+  },
+  {
+    href: "/scan",
+    icon: Search,
+    label: "Scanner Hub",
+    title: "Token · X · Project · DeFi",
+    desc: "Four scanners under one roof. Hunt token alpha, read X sentiment, surface stealth projects, find DeFi yields with risk grades.",
+    accent: "cyan",
+  },
+  {
+    href: "/terminal",
+    icon: TerminalIcon,
+    label: "AI Terminal",
+    title: "Full-screen agent terminal",
+    desc: "Drop into a focused chat with the agent runtime. Multi-turn, streaming, context-aware. Score tokens, audit contracts, draft bots from one prompt.",
     accent: "fuchsia",
   },
   {
@@ -33,20 +49,20 @@ const FEATURES = [
     accent: "amber",
   },
   {
-    href: "/market",
-    icon: TrendingUp,
-    label: "Market",
-    title: "What the agents are watching",
-    desc: "Live snapshot of top crypto by market cap with 24h/7d change and inline sparklines. Auto-refreshes every 30s — no stale data.",
-    accent: "cyan",
-  },
-  {
     href: "/composer",
     icon: Wand2,
     label: "Strategy Composer",
     title: "Plain English → executable JSON",
     desc: "Type your idea in one sentence. The composer agent emits a typed strategy with trigger, entry, exit, and risk parameters. Ready to ship.",
     accent: "fuchsia",
+  },
+  {
+    href: "/market",
+    icon: TrendingUp,
+    label: "Market",
+    title: "What the agents are watching",
+    desc: "Live snapshot of top crypto by market cap with 24h/7d change and inline sparklines. Auto-refreshes every 30s — no stale data.",
+    accent: "cyan",
   },
   {
     href: "/docs",

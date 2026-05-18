@@ -7,10 +7,12 @@ import { Menu, X } from "lucide-react";
 
 const NAV = [
   { href: "/forge", label: "Forge" },
+  { href: "/scan", label: "Scan" },
   { href: "/lab", label: "Backtest" },
   { href: "/agents", label: "Agents" },
   { href: "/market", label: "Market" },
   { href: "/composer", label: "Composer" },
+  { href: "/terminal", label: "Terminal" },
   { href: "/docs", label: "Docs" },
 ];
 

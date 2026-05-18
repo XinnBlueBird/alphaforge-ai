@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function CTA() {
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-24">
@@ -8,16 +10,16 @@ export default function CTA() {
             Ready to forge your first bot?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-zinc-400">
-            Drop into the live terminal. Ask AlphaForge to score a token, generate a
+            Drop into the full AI terminal. Ask AlphaForge to score a token, generate a
             strategy, or write a complete bot from a one-line spec.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a
-              href="#terminal"
+            <Link
+              href="/terminal"
               className="rounded-md bg-fuchsia-500 px-6 py-3 text-sm font-medium text-black transition hover:bg-fuchsia-400"
             >
               Launch Terminal →
-            </a>
+            </Link>
             <a
               href="https://github.com/XinnBlueBird/alphaforge-ai"
               target="_blank"
