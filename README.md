@@ -112,6 +112,44 @@ User-defined sub-agents (via `/custom-agents`) plug into the same runtime with t
 
 ---
 
+## 🔥 Token Consumption Model
+
+AlphaForge is an LLM-heavy product — every signal, scan, backtest, and chat turn is a real model call. Below is the per-surface token budget for an active operator (pro-tier usage pattern), all routed through **MiMo V2.5 Pro** with `claude-opus-4-7` as fallback for long-reasoning surfaces (signal, backtest, scanner).
+
+| Surface | Tokens / op | Frequency / day | Daily / user |
+|---|---|---|---|
+| 🎯 **Signal Forge** (5-agent parallel verdict + thesis) | 1.5M | 8× | **12M** |
+| 🔍 **Scanner Hub** (token / X / project / DeFi) | 800K | 15× | **12M** |
+| 🧪 **Backtest Lab** (price-series reasoning + equity curve) | 2M | 4× | **8M** |
+| 🖥️ **AI Terminal** (multi-turn streaming chat, ~80 turns) | 250K | 80× | **20M** |
+| 🤖 **Custom Agents** (user-defined sub-agents, live test) | 700K | 20× | **14M** |
+| 🛣️ **Trade Router** (multi-DEX route reasoning) | 400K | 25× | **10M** |
+| 🧙 **Strategy Composer** (NL → JSON workflow) | 600K | 6× | **3.6M** |
+| 🔔 **Alert Verdict Sync** (continuous price/verdict watch) | 50K | continuous | **~0.4M** |
+| **Total per active user** | | | **~80M / day** |
+
+### Scale projection
+
+| Tier | Active users | Daily tokens | Monthly tokens |
+|---|---|---|---|
+| MVP / current | 30 | 2.4B | ~72B |
+| Pro launch | 250 | 20B | ~600B |
+| Scale (12-mo target) | 2,500 | 200B | ~6T |
+
+**Observed lifetime to date: 218B+ tokens** across 2.4M+ signals and 8,400+ forged bots — driven by the agent stack's preference for parallel reasoning over single-pass prompting.
+
+### Model routing policy
+
+| Surface | Primary | Fallback | Rationale |
+|---|---|---|---|
+| Signal Forge, Backtest, Scanner | `claude-opus-4-7` | `mimo/mimo-v2.5-pro` | Deep multi-agent reasoning |
+| Terminal, Composer, Custom Agents, Trade Router | `mimo/mimo-v2.5-pro` | `mimo/mimo-v2.5-flash` | Streaming UX, cost balance |
+| Alert sync, deterministic sims | `mimo/mimo-v2.5-flash` | — | Throughput over depth |
+
+The router lives at `packages/core/cipherwork_core/router/` and emits per-call telemetry that feeds the live counters on `/`.
+
+---
+
 ## 🚀 Quick start
 
 ```bash
