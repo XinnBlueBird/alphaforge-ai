@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 const SYSTEM_PROMPT = `You are AlphaForge AI's terminal assistant — a multi-agent crypto alpha & bot generator.

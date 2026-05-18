@@ -57,28 +57,28 @@ const TIERS = [
 
 const FAQS = [
   {
-    q: "Apakah AlphaForge memberikan saran finansial?",
-    a: "Tidak. AlphaForge adalah research engine. Semua output bersifat informational. Selalu DYOR — Do Your Own Research — dan kelola risiko Anda sendiri.",
+    q: "Does AlphaForge provide financial advice?",
+    a: "No. AlphaForge is a research engine — all output is informational. Always DYOR (Do Your Own Research) and manage your own risk. We don't make recommendations to buy, sell, or hold any asset.",
   },
   {
-    q: "Model apa yang digunakan di belakang layar?",
-    a: "Stack utama menggunakan MiMo V2.5 Pro untuk reasoning multi-agent, dipasangkan dengan adapter on-chain dan market data realtime untuk grounding.",
+    q: "What model powers AlphaForge under the hood?",
+    a: "The core stack runs on MiMo V2.5 Pro for multi-agent reasoning, paired with on-chain adapters and realtime market data for grounding. Any OpenAI-compatible endpoint can be swapped in if you self-host.",
   },
   {
-    q: "Apakah signal ini realtime?",
-    a: "Ya. Setiap signal di-generate on-demand saat Anda menekan Generate. Tidak ada cache pra-komputasi — model membaca konteks terkini setiap call.",
+    q: "Are these signals realtime?",
+    a: "Yes. Every signal is generated on demand the moment you click Generate. There's no pre-computed cache — the model reads fresh context on every call.",
   },
   {
-    q: "Bisakah saya integrate ke trading bot saya?",
-    a: "Bisa. Endpoint /api/signal dan /api/backtest tersedia di tier Pro dengan webhook delivery. Schema dokumentasi ada di README.",
+    q: "Can I integrate AlphaForge into my own trading bot?",
+    a: "Absolutely. The /api/signal and /api/backtest endpoints are available on the Pro tier with webhook delivery. Schema and curl examples are in the API docs.",
   },
   {
-    q: "Bagaimana cara kerja backtest?",
-    a: "Backtest menggunakan profile per-strategy (drift, volatility, win rate) yang di-seed deterministik dari config Anda. Setiap konfigurasi yang sama selalu menghasilkan equity curve identik — reproducible.",
+    q: "How does the backtest engine work?",
+    a: "Each strategy carries a profile (drift, volatility, win rate) seeded deterministically from your config. Identical configs always produce identical equity curves — fully reproducible for comparison.",
   },
   {
-    q: "Apakah open source?",
-    a: "Ya. Source code lengkap ada di GitHub dengan license MIT. Anda bisa self-host stack ini dengan API key Anda sendiri.",
+    q: "Is AlphaForge open source?",
+    a: "Yes. The full source is on GitHub under MIT. You can self-host the entire stack with your own API key — no lock-in, no closed components.",
   },
 ];
 
