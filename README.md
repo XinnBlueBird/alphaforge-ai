@@ -14,20 +14,33 @@
 
 ---
 
+## 📊 Live Stats (on-page counters)
+
+| Metric | Value |
+|--------|-------|
+| Signals processed | 127K+ (incrementing live) |
+| Bots forged | 840+ |
+| Tokens consumed | 2.19B+ |
+
+---
+
 ## ✨ What you actually get
 
-AlphaForge isn't another landing page — every feature on the homepage hits a real backend endpoint:
+AlphaForge isn't another landing page — every feature hits a real backend endpoint:
 
-| Feature | What it does | API |
+| Feature | What it does | Route / API |
 |---|---|---|
-| 🎯 **Live Signal Generator** | Type a ticker → multi-agent verdict, conviction 0-100, thesis, entry/target/invalidation, per-agent scoreboard | `POST /api/signal` |
-| 📊 **Live Market Ticker** | Top crypto by market cap, 24h/7d change, sparklines, auto-refresh every 30s | `GET /api/market` |
-| 🧪 **Backtest Simulator** | Pick strategy, capital, window → equity curve vs HODL, drawdown, Sharpe, win rate | `POST /api/backtest` |
-| 💬 **Streaming Terminal** | Conversational interface to the agent runtime, SSE token streaming | `POST /api/chat` |
-| 🏗️ **Pipeline Diagram** | Click any agent to inspect inputs/outputs/example | client |
-| 💰 **Capacity Planner** | Slider 1-100k users → projected token / cost burn | client |
-| 📡 **Live Feed** | Simulated `/var/log/alphaforge/agents.log` streaming | client |
-| 💳 **Pricing + FAQ** | 3-tier plan with feature matrix + 6 common questions | client |
+| 🎯 **Signal Forge** | Multi-agent verdict, conviction 0-100, thesis, entry/target/invalidation, per-agent scoreboard | `/forge` · `POST /api/signal` |
+| 🔍 **Scanner Hub** | Token scan, X sentiment, project alpha, DeFi yields — 4 scanners in one page | `/scan` · `POST /api/scan` |
+| 🖥️ **AI Terminal** | Full-screen streaming chat with the agent runtime, multi-turn, context-aware | `/terminal` · `POST /api/chat` |
+| 🧪 **Backtest Lab** | Equity curve vs HODL, drawdown, Sharpe, win rate — 4 strategies | `/lab` · `POST /api/backtest` |
+| 🤖 **Agents Console** | Live status, throughput, confidence per sub-agent, click to inspect | `/agents` |
+| 🧙 **Strategy Composer** | Plain English → typed JSON strategy (trigger, entry, exit, risk) | `/composer` · `POST /api/compose` |
+| 📊 **Market** | Live CoinGecko prices, 24h/7d change, sparklines, auto-refresh 30s | `/market` · `GET /api/market` |
+| ⭐ **Watchlist** | localStorage persistence, add/remove tickers, quick-load on Forge | `/forge` sidebar |
+| 🔀 **Compare Mode** | 3 signals side-by-side, parallel fetch, mini agent bars | `/forge` bottom |
+| 💳 **Pricing + FAQ** | 3-tier plans, accordion FAQ (English) | `/` |
+| 📖 **API Docs** | Full reference with curl examples | `/docs` |
 
 ---
 
@@ -92,7 +105,7 @@ npm run dev
 | `FREEMODEL_API_KEY` | LLM API key (server-side only) | — required |
 | `MIMO_API_BASE` | OpenAI-compatible base URL | `https://api.freemodel.dev/v1` |
 | `MIMO_MODEL` | Model for `/api/chat` | `mimo/mimo-v2.5-pro` |
-| `SIGNAL_MODEL` | Override model for `/api/signal` | `claude-opus-4-7` |
+| `SIGNAL_MODEL` | Override model for `/api/signal` + `/api/scan` + `/api/compose` | `claude-opus-4-7` |
 | `NEXT_PUBLIC_MODEL_LABEL` | Badge text on UI | `MiMo V2.5 Pro` |
 
 Any OpenAI-compatible endpoint works — FreeModel, OpenRouter, self-hosted vLLM, etc.
@@ -119,48 +132,35 @@ Any OpenAI-compatible endpoint works — FreeModel, OpenRouter, self-hosted vLLM
 
 ### `POST /api/signal`
 
+Generate a multi-agent crypto signal.
+
 ```bash
 curl -X POST https://alphaforge-ai-sigma.vercel.app/api/signal \
   -H "content-type: application/json" \
   -d '{"symbol":"SOL"}'
 ```
 
-**Response (truncated):**
+### `POST /api/scan`
 
-```json
-{
-  "ok": true,
-  "signal": {
-    "symbol": "SOL",
-    "verdict": "BUY",
-    "conviction": 72,
-    "thesis": "SOL retains strong L1 mindshare and liquidity; trend structure constructive…",
-    "entry": "Scale in on pullbacks near current market",
-    "target": "Upside continuation toward recent highs",
-    "invalidation": "Daily breakdown below swing low + market-wide risk-off",
-    "horizon": "7d",
-    "agents": [
-      { "name": "Momentum",  "score": 74, "note": "Trend constructive but beta-driven" },
-      { "name": "Liquidity", "score": 88, "note": "Deep exchange and derivatives interest" },
-      { "name": "Narrative", "score": 79, "note": "Top L1 with active ecosystem" },
-      { "name": "OnChain",   "score": 70, "note": "Healthy validator + tx throughput" },
-      { "name": "Risk",      "score": 55, "note": "Volatility elevated; BTC beta high" }
-    ],
-    "risks": ["Macro risk-off", "BTC dominance shift", "Validator concentration"]
-  },
-  "meta": { "latency_ms": 9447, "model": "MiMo V2.5 Pro", "generated_at": "2026-05-18T04:42:12.000Z" }
-}
+Four scanner modes: `token`, `x`, `project`, `defi`.
+
+```bash
+curl -X POST https://alphaforge-ai-sigma.vercel.app/api/scan \
+  -H "content-type: application/json" \
+  -d '{"kind":"token","query":"SOL"}'
 ```
 
 ### `GET /api/market`
+
+Live market snapshot from CoinGecko.
 
 ```bash
 curl 'https://alphaforge-ai-sigma.vercel.app/api/market?ids=BTC,ETH,SOL'
 ```
 
-Returns CoinGecko-backed market snapshot — price, 24h/7d change, 7d sparkline.
-
 ### `POST /api/backtest`
+
+Deterministic equity-curve simulator. Strategies: `momentum` · `mean_reversion` · `breakout` · `multi_agent`.
 
 ```bash
 curl -X POST https://alphaforge-ai-sigma.vercel.app/api/backtest \
@@ -168,13 +168,19 @@ curl -X POST https://alphaforge-ai-sigma.vercel.app/api/backtest \
   -d '{"symbol":"BTC","strategy":"multi_agent","capital":10000,"days":90}'
 ```
 
-**Strategies:** `momentum` · `mean_reversion` · `breakout` · `multi_agent`
+### `POST /api/compose`
 
-Returns equity curve, drawdown series, and summary metrics (Sharpe, max DD, win rate, alpha vs buy-and-hold). Deterministic per-config — same input always yields the same curve.
+Plain English → executable strategy JSON.
+
+```bash
+curl -X POST https://alphaforge-ai-sigma.vercel.app/api/compose \
+  -H "content-type: application/json" \
+  -d '{"intent":"Buy SOL on RSI < 30, TP +5%, SL -3%"}'
+```
 
 ### `POST /api/chat`
 
-Streaming SSE chat with the agent runtime. OpenAI-compatible message format.
+SSE streaming chat with the agent runtime. OpenAI-compatible message format.
 
 ---
 
@@ -182,9 +188,12 @@ Streaming SSE chat with the agent runtime. OpenAI-compatible message format.
 
 - [x] v0.1 — landing scaffold
 - [x] v0.2 — interactive pipeline, live feed, capacity planner
-- [x] **v0.3 — live signal engine + market data + backtest simulator** ← *you are here*
-- [ ] v0.4 — webhook execution, portfolio tracking, alerts
-- [ ] v0.5 — strategy builder UI, custom agents, on-chain trade routing
+- [x] v0.3 — live signal engine + market data + backtest simulator
+- [x] v0.4 — multi-page restructure + streaming hero chat + agents console + composer
+- [x] v0.5 — logo + watchlist + signal history + compare mode
+- [x] **v0.6 — AI terminal page + scanner hub (Token/X/Project/DeFi)** ← *you are here*
+- [ ] v0.7 — webhook alerts, portfolio tracking, Telegram integration
+- [ ] v0.8 — strategy builder UI, custom agents, on-chain trade routing
 - [ ] v1.0 — multi-tenant, API tokens, dashboard, billing
 
 ---
