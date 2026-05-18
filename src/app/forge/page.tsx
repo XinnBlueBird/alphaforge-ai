@@ -1,12 +1,13 @@
 import SignalGenerator from "@/components/SignalGenerator";
+import CompareSignals from "@/components/CompareSignals";
 import { Sparkles } from "lucide-react";
 
 export const metadata = { title: "Signal Forge · AlphaForge AI" };
 
 export default function ForgePage() {
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12">
-      <div className="mb-8">
+    <main className="mx-auto max-w-6xl px-6 py-12 space-y-16">
+      <div>
         <div className="inline-flex items-center gap-2 rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 px-3 py-1 text-xs text-fuchsia-300">
           <Sparkles className="h-3 w-3" /> Signal Forge
         </div>
@@ -23,6 +24,7 @@ export default function ForgePage() {
         </p>
       </div>
       <SignalGenerator />
+      <CompareSignals />
     </main>
   );
 }

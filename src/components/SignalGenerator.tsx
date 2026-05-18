@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Loader2, AlertTriangle, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import {
+  Sparkles, Loader2, AlertTriangle, TrendingUp, TrendingDown, Minus,
+  Star, History, Trash2,
+} from "lucide-react";
+import Watchlist, { useWatchlist } from "./Watchlist";
 
 type Agent = { name: string; score: number; note: string };
 type Signal = {
@@ -27,10 +31,33 @@ type ApiResponse = {
 
 const PRESETS = ["BTC", "ETH", "SOL", "ARB", "JUP", "PEPE", "WIF", "BONK"];
 
+type HistoryItem = { symbol: string; verdict: string; conviction: number; ts: number };
+const HISTORY_KEY = "af_signal_history";
+
 export default function SignalGenerator() {
   const [symbol, setSymbol] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ApiResponse | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const { toggle, isWatched } = useWatchlist();
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (raw) setHistory(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  function pushHistory(item: HistoryItem) {
+    const next = [item, ...history.filter((h) => h.symbol !== item.symbol)].slice(0, 8);
+    setHistory(next);
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch {}
+  }
+
+  function clearHistory() {
+    setHistory([]);
+    try { localStorage.removeItem(HISTORY_KEY); } catch {}
+  }
 
   async function generate(s: string) {
     const sym = s.trim().toUpperCase();
@@ -46,6 +73,14 @@ export default function SignalGenerator() {
       });
       const json = (await res.json()) as ApiResponse;
       setData(json);
+      if (json.ok && json.signal) {
+        pushHistory({
+          symbol: json.signal.symbol,
+          verdict: json.signal.verdict,
+          conviction: json.signal.conviction,
+          ts: Date.now(),
+        });
+      }
     } catch (e) {
       setData({ ok: false, error: String(e) });
     } finally {
@@ -54,95 +89,117 @@ export default function SignalGenerator() {
   }
 
   return (
-    <section id="signal" className="relative mx-auto max-w-6xl px-6 py-20">
-      <div className="mb-10">
-        <div className="text-xs uppercase tracking-wider text-fuchsia-400 mb-3 font-medium">
-          Live Signal Engine
-        </div>
-        <h2 className="text-4xl md:text-5xl font-semibold tracking-tight">
-          Real signal.{" "}
-          <span className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">
-            Live model.
-          </span>
-        </h2>
-        <p className="mt-4 max-w-2xl text-zinc-400">
-          Type a token, the multi-agent stack scores it across momentum, liquidity, narrative,
-          on-chain, and risk — then writes a thesis with entry, target, and invalidation. Backed by
-          MiMo V2.5 Pro running server-side.
-        </p>
-      </div>
-
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-6 backdrop-blur">
-        <div className="flex flex-wrap gap-2 mb-4">
-          {PRESETS.map((p) => (
-            <button
-              key={p}
-              onClick={() => generate(p)}
-              disabled={loading}
-              className="rounded-md border border-zinc-700 bg-zinc-900/60 px-3 py-1.5 text-xs font-mono text-zinc-300 hover:border-fuchsia-500/40 hover:text-white disabled:opacity-50"
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            generate(symbol);
-          }}
-          className="flex gap-2"
-        >
-          <input
-            value={symbol}
-            onChange={(e) => setSymbol(e.target.value)}
-            placeholder="Type a ticker or contract address (e.g. SOL, ARB, 0x…)"
-            className="flex-1 rounded-md border border-zinc-700 bg-zinc-900/60 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-fuchsia-500/60 focus:outline-none"
-            maxLength={64}
-          />
-          <button
-            type="submit"
-            disabled={loading || !symbol.trim()}
-            className="inline-flex items-center gap-2 rounded-md bg-fuchsia-500 px-5 py-2.5 text-sm font-medium text-black transition hover:bg-fuchsia-400 disabled:cursor-not-allowed disabled:opacity-50"
+    <section id="signal" className="grid gap-6 lg:grid-cols-[1fr_280px]">
+      {/* Main column */}
+      <div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-6 backdrop-blur">
+          <form
+            onSubmit={(e) => { e.preventDefault(); generate(symbol); }}
+            className="flex gap-2 mb-4"
           >
-            {loading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Forging…
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4" /> Generate
-              </>
-            )}
-          </button>
-        </form>
-
-        <AnimatePresence mode="wait">
-          {data && (
-            <motion.div
-              key={data.ok ? "ok" : "err"}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}
-              className="mt-6"
+            <input
+              value={symbol}
+              onChange={(e) => setSymbol(e.target.value)}
+              placeholder="Type a ticker or contract address (e.g. SOL, ARB, 0x…)"
+              className="flex-1 rounded-md border border-zinc-700 bg-zinc-900/60 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-fuchsia-500/60 focus:outline-none"
+              maxLength={64}
+            />
+            <button
+              type="submit"
+              disabled={loading || !symbol.trim()}
+              className="inline-flex items-center gap-2 rounded-md bg-fuchsia-500 px-5 py-2.5 text-sm font-medium text-black transition hover:bg-fuchsia-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {data.ok && data.signal ? (
-                <SignalCard sig={data.signal} meta={data.meta} />
-              ) : (
-                <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
-                  <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <div className="font-medium">Signal generation failed</div>
-                    <div className="mt-1 text-amber-200/70 text-xs">
-                      {data.error || "Unknown error"}{data.detail ? ` — ${data.detail}` : ""}
+              {loading
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Forging…</>
+                : <><Sparkles className="h-4 w-4" /> Generate</>}
+            </button>
+          </form>
+
+          <div className="flex flex-wrap gap-2">
+            {PRESETS.map((p) => (
+              <button
+                key={p}
+                onClick={() => generate(p)}
+                disabled={loading}
+                className="rounded-md border border-zinc-700 bg-zinc-900/60 px-3 py-1.5 text-xs font-mono text-zinc-300 hover:border-fuchsia-500/40 hover:text-white disabled:opacity-50"
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+
+          <AnimatePresence mode="wait">
+            {data && (
+              <motion.div
+                key={data.ok ? `ok-${data.signal?.symbol}` : "err"}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25 }}
+                className="mt-6"
+              >
+                {data.ok && data.signal ? (
+                  <SignalCard
+                    sig={data.signal}
+                    meta={data.meta}
+                    watched={isWatched(data.signal.symbol)}
+                    onToggleWatch={() => toggle(data.signal!.symbol)}
+                  />
+                ) : (
+                  <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
+                    <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-medium">Signal generation failed</div>
+                      <div className="mt-1 text-amber-200/70 text-xs">
+                        {data.error || "Unknown error"}{data.detail ? ` — ${data.detail}` : ""}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Sidebar: watchlist + history */}
+      <div className="space-y-4">
+        <Watchlist onSelect={(s) => generate(s)} />
+
+        {history.length > 0 && (
+          <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <History className="h-3.5 w-3.5 text-cyan-400" />
+                <span className="text-xs uppercase tracking-wider text-zinc-400 font-medium">Recent</span>
+              </div>
+              <button
+                onClick={clearHistory}
+                className="text-zinc-600 hover:text-rose-400"
+                aria-label="Clear history"
+              >
+                <Trash2 className="h-3 w-3" />
+              </button>
+            </div>
+            <div className="space-y-1.5">
+              {history.map((h) => {
+                const v = verdictStyle(h.verdict);
+                return (
+                  <button
+                    key={`${h.symbol}-${h.ts}`}
+                    onClick={() => generate(h.symbol)}
+                    className="flex w-full items-center justify-between rounded-md border border-zinc-800 bg-zinc-900/40 px-2.5 py-1.5 text-xs hover:border-zinc-700"
+                  >
+                    <span className="font-mono font-medium text-zinc-200">{h.symbol}</span>
+                    <span className={`font-mono ${v.color}`}>
+                      {h.verdict.replace(/_/g, " ")} · {h.conviction}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -157,7 +214,14 @@ function verdictStyle(v: string) {
   return { color: "text-zinc-300", bg: "bg-zinc-500/5", border: "border-zinc-500/20", icon: Minus };
 }
 
-function SignalCard({ sig, meta }: { sig: Signal; meta?: ApiResponse["meta"] }) {
+function SignalCard({
+  sig, meta, watched, onToggleWatch,
+}: {
+  sig: Signal;
+  meta?: ApiResponse["meta"];
+  watched: boolean;
+  onToggleWatch: () => void;
+}) {
   const v = verdictStyle(sig.verdict);
   const Icon = v.icon;
   return (
@@ -166,7 +230,17 @@ function SignalCard({ sig, meta }: { sig: Signal; meta?: ApiResponse["meta"] }) 
         <div className={`rounded-xl border ${v.border} ${v.bg} p-5`}>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="text-xs uppercase tracking-wider text-zinc-400">Verdict · {sig.symbol}</div>
+              <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-zinc-400">
+                Verdict · {sig.symbol}
+                <button
+                  onClick={onToggleWatch}
+                  className={watched ? "text-amber-400" : "text-zinc-600 hover:text-amber-400"}
+                  aria-label={watched ? "Unwatch" : "Watch"}
+                  title={watched ? "Unwatch" : "Watch"}
+                >
+                  <Star className="h-3.5 w-3.5" fill={watched ? "currentColor" : "none"} />
+                </button>
+              </div>
               <div className={`mt-1 flex items-center gap-2 text-2xl font-semibold ${v.color}`}>
                 <Icon className="h-6 w-6" /> {sig.verdict.replace(/_/g, " ")}
               </div>

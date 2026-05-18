@@ -22,7 +22,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-zinc-800/50 bg-black/70 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-2 font-mono text-sm">
-          <span className="rounded bg-fuchsia-500 px-2 py-0.5 font-bold text-black">AF</span>
+          <img src="/logo.svg" alt="AlphaForge" className="h-7 w-7" />
           <span className="text-zinc-200">
             alphaforge<span className="text-fuchsia-400">.ai</span>
           </span>

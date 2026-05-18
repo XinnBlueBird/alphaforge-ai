@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <linearGradient id="afgrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d946ef"/>
+      <stop offset=".55" stop-color="#ec4899"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="afspark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fef3c7"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square shield -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#afgrad)"/>
+
+  <!-- Inner darken to give depth -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="black" opacity="0.18"/>
+
+  <!-- Bold A formed by two angled bars + crossbar (the 'Alpha') -->
+  <g fill="white">
+    <!-- Left leg -->
+    <path d="M21 48 L29 18 L33.5 18 L25.5 48 Z"/>
+    <!-- Right leg -->
+    <path d="M30.5 18 L35 18 L43 48 L38.5 48 Z"/>
+    <!-- Crossbar -->
+    <rect x="25" y="33" width="14" height="3.5" rx="1.2"/>
+  </g>
+
+  <!-- Forge spark / hammer strike — small accent dot top-right -->
+  <circle cx="48" cy="16" r="3.2" fill="url(#afspark)"/>
+  <circle cx="48" cy="16" r="1.4" fill="white"/>
+</svg>
