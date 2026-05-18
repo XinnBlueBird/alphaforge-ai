@@ -1,16 +1,25 @@
 "use client";
 
-import { AGENTS, dailyTokensFor, formatTokens, totalDailyTokens } from "@/lib/agents";
+import { useState } from "react";
+import { AGENTS, dailyTokensFor, formatTokens, formatNumber, totalDailyTokens } from "@/lib/agents";
 
 export default function TokenTable() {
   const total = totalDailyTokens();
+  const [users, setUsers] = useState(1000);
+
   return (
-    <section id="tokens" className="mx-auto max-w-6xl px-6 py-16">
+    <section id="tokens" className="mx-auto max-w-6xl px-6 py-20">
       <div className="mb-8">
-        <h2 className="text-3xl font-semibold tracking-tight">Token Consumption</h2>
-        <p className="mt-2 max-w-2xl text-zinc-400">
-          AlphaForge runs hot. Each active user triggers ~80M tokens/day across
-          the agent pipeline — long-context reasoning + multi-language code-gen.
+        <span className="rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs uppercase tracking-wider text-zinc-400">
+          Token Economy
+        </span>
+        <h2 className="mt-4 text-4xl font-semibold tracking-tight">
+          AlphaForge runs hot.
+        </h2>
+        <p className="mt-3 max-w-2xl text-zinc-400">
+          Every active user triggers ~80M tokens/day across long-context reasoning
+          and multi-language code-gen. This isn&apos;t API window-dressing — it&apos;s
+          the computational core.
         </p>
       </div>
 
@@ -25,7 +34,7 @@ export default function TokenTable() {
         {AGENTS.map((a) => (
           <div
             key={a.id}
-            className="grid grid-cols-12 items-center border-b border-zinc-900 px-4 py-3 text-sm last:border-0"
+            className="grid grid-cols-12 items-center border-b border-zinc-900 px-4 py-3 text-sm last:border-0 hover:bg-zinc-900/30"
           >
             <div className="col-span-4 flex items-center gap-2">
               <span>{a.emoji}</span>
@@ -52,18 +61,39 @@ export default function TokenTable() {
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-3">
-        <Stat label="Per active user / day" value={formatTokens(total)} />
-        <Stat label="Per 1k users / day" value={formatTokens(total * 1000)} />
-        <Stat label="Per 1k users / month" value={formatTokens(total * 1000 * 30)} />
+      {/* projection calculator */}
+      <div className="mt-6 rounded-lg border border-zinc-800 bg-zinc-950/40 p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="text-sm font-medium text-zinc-100">Capacity Planner</div>
+            <div className="text-xs text-zinc-500">
+              Drag the slider to project token consumption at user scale.
+            </div>
+          </div>
+          <div className="font-mono text-sm text-fuchsia-300">{formatNumber(users)} users</div>
+        </div>
+        <input
+          type="range"
+          min={1}
+          max={100000}
+          step={1}
+          value={users}
+          onChange={(e) => setUsers(parseInt(e.target.value))}
+          className="mt-4 w-full accent-fuchsia-500"
+        />
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <Cell label="Daily tokens" value={formatTokens(total * users)} />
+          <Cell label="Monthly tokens" value={formatTokens(total * users * 30)} />
+          <Cell label="Yearly tokens" value={formatTokens(total * users * 365)} />
+        </div>
       </div>
     </section>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Cell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-950/40 p-4">
+    <div className="rounded border border-zinc-800 bg-black/40 p-4">
       <div className="text-xs uppercase tracking-wider text-zinc-500">{label}</div>
       <div className="mt-1 font-mono text-2xl text-zinc-100">{value}</div>
     </div>
