@@ -1,215 +1,209 @@
-<div align="center">
+# AlphaForge AI
 
-# 🔥 AlphaForge AI
+> **Multi-agent crypto alpha & bot forge.** Type a token, the agent stack scores it, writes a thesis with entry/target/invalidation, and stress-tests strategies against historical-style returns — all live, all real, no mockups.
 
-### Multi-Agent Crypto Alpha → Auto Bot Generator
+<p align="left">
+  <a href="https://alphaforge-ai-sigma.vercel.app"><img alt="Live Demo" src="https://img.shields.io/badge/demo-live-22c55e?style=for-the-badge" /></a>
+  <a href="https://nextjs.org/"><img alt="Next.js 14" src="https://img.shields.io/badge/Next.js-14-000?style=for-the-badge&logo=nextdotjs" /></a>
+  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=for-the-badge&logo=typescript&logoColor=white" /></a>
+  <a href="https://vercel.com"><img alt="Vercel" src="https://img.shields.io/badge/Deployed-Vercel-000?style=for-the-badge&logo=vercel" /></a>
+  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" />
+</p>
 
-**Hunt alpha. Forge bots. One loop.** Powered by **MiMo V2.5 Pro**.
-
-[![Built with Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8?logo=tailwindcss)](https://tailwindcss.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Powered by MiMo](https://img.shields.io/badge/Powered%20by-MiMo%20V2.5%20Pro-ec4899)](#)
-
-[**Live demo →**](https://alphaforge-ai.vercel.app) · [**Pipeline**](#-the-pipeline) · [**Token Economy**](#-token-economy) · [**Quickstart**](#-quickstart)
-
-</div>
+🔗 **Live demo:** <https://alphaforge-ai-sigma.vercel.app>
 
 ---
 
-## ✨ What is AlphaForge?
+## ✨ What you actually get
 
-Most crypto AI tools stop at alerts. AlphaForge closes the loop:
+AlphaForge isn't another landing page — every feature on the homepage hits a real backend endpoint:
 
-> **signal → reasoning → executable code → deploy memo**
-
-It's a 7-agent pipeline that scans X, Telegram, Discord and on-chain — scores
-conviction with long-context reasoning — then forges a runnable bot, runs a
-backtest, and emits a deployment memo. All in one pass.
-
-It's also a stress test for **MiMo V2.5 Pro**: every active user generates
-**~80M tokens/day** across reasoning + multi-language code generation.
+| Feature | What it does | API |
+|---|---|---|
+| 🎯 **Live Signal Generator** | Type a ticker → multi-agent verdict, conviction 0-100, thesis, entry/target/invalidation, per-agent scoreboard | `POST /api/signal` |
+| 📊 **Live Market Ticker** | Top crypto by market cap, 24h/7d change, sparklines, auto-refresh every 30s | `GET /api/market` |
+| 🧪 **Backtest Simulator** | Pick strategy, capital, window → equity curve vs HODL, drawdown, Sharpe, win rate | `POST /api/backtest` |
+| 💬 **Streaming Terminal** | Conversational interface to the agent runtime, SSE token streaming | `POST /api/chat` |
+| 🏗️ **Pipeline Diagram** | Click any agent to inspect inputs/outputs/example | client |
+| 💰 **Capacity Planner** | Slider 1-100k users → projected token / cost burn | client |
+| 📡 **Live Feed** | Simulated `/var/log/alphaforge/agents.log` streaming | client |
+| 💳 **Pricing + FAQ** | 3-tier plan with feature matrix + 6 common questions | client |
 
 ---
 
-## 🧠 The Pipeline
-
-Seven specialised agents across four roles. Click any cell on the live site
-to inspect inputs, outputs, and a real example.
+## 🧠 Agent stack
 
 ```
-┌──────────────┐   ┌────────────────┐   ┌──────────────────┐   ┌────────────────────┐
-│ 🔍 Social    │ → │ ⛓️  OnChain    │ → │ 📊 Conviction    │ → │ 🧠 Strategy        │
-│   Scraper    │   │   Verifier      │   │   Scorer         │   │   Architect        │
-│   [Intel]    │   │   [Intel]       │   │   [Reasoning]    │   │   [Reasoning]      │
-└──────────────┘   └────────────────┘   └──────────────────┘   └─────────┬──────────┘
-                                                                         │
-                       ┌──────────────────┐   ┌──────────────────┐   ┌───▼──────────────┐
-                       │ 📝 Deploy Memo   │ ← │ 📈 Backtest      │ ← │ 🛠️  Bot Code     │
-                       │   Writer         │   │   Generator      │   │   Generator      │
-                       │   [Output]       │   │   [Coding]       │   │   [Coding]       │
-                       └──────────────────┘   └──────────────────┘   └──────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│  USER INPUT  (ticker / contract / natural language)         │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+   ┌─────────┐       ┌─────────┐       ┌─────────┐
+   │Momentum │       │Liquidity│       │Narrative│
+   │  Agent  │       │  Agent  │       │  Agent  │
+   └────┬────┘       └────┬────┘       └────┬────┘
+        │                 │                 │
+        ▼                 ▼                 ▼
+   ┌─────────┐       ┌─────────┐       ┌─────────┐
+   │OnChain  │       │  Risk   │       │ Verdict │
+   │  Agent  │       │  Agent  │       │Synth +  │
+   └────┬────┘       └────┬────┘       │Thesis   │
+        │                 │            └────┬────┘
+        └─────────────────┴─────────────────┘
+                          │
+                          ▼
+                  ┌───────────────┐
+                  │ Signal JSON   │
+                  │ (verdict +    │
+                  │  conviction + │
+                  │  agents[])    │
+                  └───────────────┘
 ```
 
-| # | Agent | Role | Tokens / Op | Freq / Day | Daily / User |
-|--:|---|---|---:|---:|---:|
-| 1 | 🔍 **Social Scraper** | Intel | 600K | 48× | **28.8M** |
-| 2 | ⛓️ **OnChain Verifier** | Intel | 700K | 12× | 8.4M |
-| 3 | 📊 **Conviction Scorer** | Reasoning | 500K | 24× | 12M |
-| 4 | 🧠 **Strategy Architect** | Reasoning | 800K | 12× | 9.6M |
-| 5 | 🛠️ **Bot Code Generator** | Coding | 1M | 12× | **12M** |
-| 6 | 📈 **Backtest Generator** | Coding | 600K | 12× | 7.2M |
-| 7 | 📝 **Deploy Memo Writer** | Output | 350K | 6× | 2.1M |
-| | **Total per active user** | | | | **~80.1M / day** |
+All five sub-agents reason in parallel inside a single model call (MiMo V2.5 Pro), then the verdict synthesizer aggregates scores and writes the thesis. Sub-second to ~10s wall-clock per signal depending on model load.
 
 ---
 
-## 💎 Features
-
-### 🎯 The Loop
-- **Multi-source intel** — X, Telegram, Discord, on-chain RPC
-- **On-chain truth** — holders, dev activity, LP, contract risk
-- **Long-context reasoning** — MiMo scores conviction across momentum, narrative, risk
-- **Strategy spec** — snipe, accumulate, farm, hedge, short
-- **Code-gen** — full Python / TypeScript / Solidity bot, ready to deploy
-- **Backtest** — historical sim, equity curve, Monte-carlo
-- **Memo + tweet thread** — markdown-ready output for Telegram/X/Notion
-
-### 🖥️ Live Terminal
-- SSE-streaming chat embedded on the landing page
-- Real-time `tokens in / tokens out` meter
-- Direct passthrough to MiMo V2.5 Pro via FreeModel/9Router
-- Hacker-aesthetic UI, no DOM bloat
-
-### 📊 Capacity Planner
-- Interactive slider: project token consumption from 1 to 100k users
-- Daily / monthly / yearly projections live-rendered
-
-### 📡 Live Feed
-- Simulated agent activity stream (real in production)
-- `/var/log/alphaforge/agents.log` aesthetic with timestamps + status flags
-
-### ⚖️ Comparison Matrix
-- AlphaForge vs alpha-alert tools vs code-gen toys
-- Honest feature parity grid
-
-### 🎨 Design
-- Dark, neon, hacker-grade aesthetic
-- Animated grid backdrop, gradient blurs, pulse indicators
-- Fully responsive
-
----
-
-## 💰 Token Economy
-
-AlphaForge is intentionally token-heavy. The architecture is designed to
-showcase MiMo V2.5 Pro's strengths: **long-context reasoning + multi-language
-code generation** working in tandem.
-
-| Scale | Tokens / day | Tokens / month | Tokens / year |
-|---|---:|---:|---:|
-| **1 active user** | 80.1M | 2.4B | 29.2B |
-| **1k active users** | 80.1B | 2.4T | 29.2T |
-| **10k active users** | 801B | 24T | 292T |
-
-> Try the **Capacity Planner** on the live site to project your own scale.
-
----
-
-## 🚀 Quickstart
+## 🚀 Quick start
 
 ```bash
+# 1. Clone
 git clone https://github.com/XinnBlueBird/alphaforge-ai.git
 cd alphaforge-ai
-cp .env.example .env.local
-# fill MIMO_API_KEY (FreeModel works out of the box — Anthropic + OpenAI compatible)
 
+# 2. Install
 npm install
-npm run dev
-```
 
-Open <http://localhost:3000>.
+# 3. Configure
+cp .env.example .env.local
+# edit .env.local — set FREEMODEL_API_KEY (or any OpenAI-compatible endpoint)
+
+# 4. Dev
+npm run dev
+# → http://localhost:3000
+```
 
 ### Environment
 
-| Variable | Default | Required | Purpose |
-|---|---|:-:|---|
-| `MIMO_API_KEY` | — | ✅ | Server-side MiMo / FreeModel API key |
-| `MIMO_API_BASE` | `https://api.freemodel.dev/v1` |  | OpenAI-compatible endpoint |
-| `MIMO_MODEL` | `mimo/mimo-v2.5-pro` |  | Model ID to route to |
-| `NEXT_PUBLIC_MODEL_LABEL` | `MiMo V2.5 Pro` |  | UI display label |
-
-### One-click deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FXinnBlueBird%2Falphaforge-ai)
-
-Set `MIMO_API_KEY` in the Vercel environment variables and you're live.
-
----
-
-## 🏗️ Architecture
-
-```
-┌────────────────────────────────────────────────────────────┐
-│                      Next.js 14 (App Router)               │
-│                                                            │
-│   src/app/page.tsx                                         │
-│   ├── Hero          (live counters, gradient backdrop)     │
-│   ├── PipelineDiagram (interactive agent inspector)        │
-│   ├── TokenTable    (capacity planner slider)              │
-│   ├── Terminal      (SSE chat → /api/chat)                 │
-│   ├── LiveFeed      (simulated agent log stream)           │
-│   ├── Compare       (feature matrix)                       │
-│   ├── Stack         (tech grid)                            │
-│   ├── CTA           (final pitch)                          │
-│   └── Footer                                               │
-│                                                            │
-│   src/app/api/chat/route.ts                                │
-│   └── POST → SSE proxy                                     │
-│       └── upstream: ${MIMO_API_BASE}/chat/completions      │
-│           (model: mimo/mimo-v2.5-pro)                      │
-└────────────────────────────────────────────────────────────┘
-```
-
-### Streaming contract
-
-The `/api/chat` route wraps the upstream SSE stream and emits a final
-`event: usage` with `prompt_tokens` and `completion_tokens` so the client
-terminal can render live token meters without a second round-trip.
-
----
-
-## 🛠️ Stack
-
-| Layer | Choice | Why |
+| Variable | Purpose | Default |
 |---|---|---|
-| Framework | **Next.js 14** App Router | RSC + edge-friendly streaming |
-| Language | **TypeScript 5** | Type-safe agent contracts |
-| Styling | **Tailwind 3** | Utility-first, zero runtime |
-| Streaming | **Server-Sent Events** | Native browser, no WS overhead |
-| LLM | **MiMo V2.5 Pro** via FreeModel/9Router | Long-context + coding |
-| Chains | **Solana + EVM** RPC | Multi-chain on-chain verification |
-| Deploy | **Vercel** | One-click serverless |
+| `FREEMODEL_API_KEY` | LLM API key (server-side only) | — required |
+| `MIMO_API_BASE` | OpenAI-compatible base URL | `https://api.freemodel.dev/v1` |
+| `MIMO_MODEL` | Model for `/api/chat` | `mimo/mimo-v2.5-pro` |
+| `SIGNAL_MODEL` | Override model for `/api/signal` | `claude-opus-4-7` |
+| `NEXT_PUBLIC_MODEL_LABEL` | Badge text on UI | `MiMo V2.5 Pro` |
+
+Any OpenAI-compatible endpoint works — FreeModel, OpenRouter, self-hosted vLLM, etc.
+
+---
+
+## 🛠️ Tech stack
+
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS |
+| Charts | Recharts |
+| Animation | Framer Motion |
+| Icons | Lucide |
+| LLM | OpenAI SDK (any compatible endpoint) |
+| Market data | CoinGecko free tier |
+| Hosting | Vercel (Edge + Serverless) |
+
+---
+
+## 📡 API reference
+
+### `POST /api/signal`
+
+```bash
+curl -X POST https://alphaforge-ai-sigma.vercel.app/api/signal \
+  -H "content-type: application/json" \
+  -d '{"symbol":"SOL"}'
+```
+
+**Response (truncated):**
+
+```json
+{
+  "ok": true,
+  "signal": {
+    "symbol": "SOL",
+    "verdict": "BUY",
+    "conviction": 72,
+    "thesis": "SOL retains strong L1 mindshare and liquidity; trend structure constructive…",
+    "entry": "Scale in on pullbacks near current market",
+    "target": "Upside continuation toward recent highs",
+    "invalidation": "Daily breakdown below swing low + market-wide risk-off",
+    "horizon": "7d",
+    "agents": [
+      { "name": "Momentum",  "score": 74, "note": "Trend constructive but beta-driven" },
+      { "name": "Liquidity", "score": 88, "note": "Deep exchange and derivatives interest" },
+      { "name": "Narrative", "score": 79, "note": "Top L1 with active ecosystem" },
+      { "name": "OnChain",   "score": 70, "note": "Healthy validator + tx throughput" },
+      { "name": "Risk",      "score": 55, "note": "Volatility elevated; BTC beta high" }
+    ],
+    "risks": ["Macro risk-off", "BTC dominance shift", "Validator concentration"]
+  },
+  "meta": { "latency_ms": 9447, "model": "MiMo V2.5 Pro", "generated_at": "2026-05-18T04:42:12.000Z" }
+}
+```
+
+### `GET /api/market`
+
+```bash
+curl 'https://alphaforge-ai-sigma.vercel.app/api/market?ids=BTC,ETH,SOL'
+```
+
+Returns CoinGecko-backed market snapshot — price, 24h/7d change, 7d sparkline.
+
+### `POST /api/backtest`
+
+```bash
+curl -X POST https://alphaforge-ai-sigma.vercel.app/api/backtest \
+  -H "content-type: application/json" \
+  -d '{"symbol":"BTC","strategy":"multi_agent","capital":10000,"days":90}'
+```
+
+**Strategies:** `momentum` · `mean_reversion` · `breakout` · `multi_agent`
+
+Returns equity curve, drawdown series, and summary metrics (Sharpe, max DD, win rate, alpha vs buy-and-hold). Deterministic per-config — same input always yields the same curve.
+
+### `POST /api/chat`
+
+Streaming SSE chat with the agent runtime. OpenAI-compatible message format.
 
 ---
 
 ## 🗺️ Roadmap
 
-- [x] **v0.1** — Landing page, pipeline diagram, token table, live terminal
-- [x] **v0.2** — Live feed, comparison matrix, capacity planner, navigation
-- [ ] **v0.3** — Real agent execution backend (Python workers, Redis queue)
-- [ ] **v0.4** — Telegram + Discord delivery channels
-- [ ] **v0.5** — Auto-deploy bot to user's wallet (with explicit confirmation)
-- [ ] **v0.6** — Backtest replay UI with equity curve charts
-- [ ] **v1.0** — Public launch + hosted SaaS tier
+- [x] v0.1 — landing scaffold
+- [x] v0.2 — interactive pipeline, live feed, capacity planner
+- [x] **v0.3 — live signal engine + market data + backtest simulator** ← *you are here*
+- [ ] v0.4 — webhook execution, portfolio tracking, alerts
+- [ ] v0.5 — strategy builder UI, custom agents, on-chain trade routing
+- [ ] v1.0 — multi-tenant, API tokens, dashboard, billing
 
 ---
 
-## 🤝 Built by
+## 🤝 Contributing
 
-[**@XinnBlueBird**](https://github.com/XinnBlueBird) — crypto + AI, on-chain native.
-Find me on X: [**@Xinnsky**](https://x.com/Xinnsky).
+PRs welcome. Open an issue first for big changes. Conventional Commits preferred.
+
+```bash
+git checkout -b feat/your-feature
+git commit -m "feat(signal): add support for L2 contract addresses"
+git push origin feat/your-feature
+```
+
+---
+
+## ⚠️ Disclaimer
+
+AlphaForge AI generates research output. **It is not financial advice.** Trading crypto carries substantial risk. DYOR, size your positions responsibly, and never deploy capital you can't afford to lose. The maintainers accept no liability for trading outcomes.
 
 ---
 
@@ -217,5 +211,4 @@ Find me on X: [**@Xinnsky**](https://x.com/Xinnsky).
 
 MIT © XinnBlueBird
 
-> AlphaForge AI is an independent project. **MiMo V2.5 Pro** is referenced as
-> the recommended reasoning engine and is not affiliated with this repository.
+Built by [@Xinnsky](https://x.com/Xinnsky) with BlueBird Agent · live at [alphaforge-ai-sigma.vercel.app](https://alphaforge-ai-sigma.vercel.app)

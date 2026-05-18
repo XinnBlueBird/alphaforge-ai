@@ -31,11 +31,12 @@ export default function Hero() {
           <span className="text-zinc-200">alphaforge<span className="text-fuchsia-400">.ai</span></span>
         </div>
         <div className="hidden gap-6 text-sm text-zinc-400 md:flex">
+          <a href="#signal" className="hover:text-white">Signal</a>
+          <a href="#market" className="hover:text-white">Market</a>
+          <a href="#backtest" className="hover:text-white">Backtest</a>
           <a href="#agents" className="hover:text-white">Agents</a>
-          <a href="#tokens" className="hover:text-white">Token Economy</a>
           <a href="#terminal" className="hover:text-white">Terminal</a>
-          <a href="#feed" className="hover:text-white">Live Feed</a>
-          <a href="#compare" className="hover:text-white">Compare</a>
+          <a href="#pricing" className="hover:text-white">Pricing</a>
         </div>
         <a
           href="https://github.com/XinnBlueBird/alphaforge-ai"
@@ -50,7 +51,7 @@ export default function Hero() {
       <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-20">
         <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs text-zinc-300">
           <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          Powered by {MODEL_LABEL} · 7 agents · streaming live
+          Powered by {MODEL_LABEL} · multi-agent · streaming live
         </div>
 
         <h1 className="mt-6 text-5xl font-semibold tracking-tight md:text-7xl">
@@ -69,16 +70,16 @@ export default function Hero() {
 
         <div className="mt-8 flex flex-wrap gap-3">
           <a
-            href="#terminal"
+            href="#signal"
             className="rounded-md bg-fuchsia-500 px-5 py-2.5 text-sm font-medium text-black transition hover:bg-fuchsia-400"
           >
-            Try the Terminal →
+            Generate Live Signal →
           </a>
           <a
-            href="#agents"
+            href="#backtest"
             className="rounded-md border border-zinc-700 bg-zinc-900/60 px-5 py-2.5 text-sm font-medium text-zinc-200 transition hover:bg-zinc-800"
           >
-            See the Pipeline
+            Run a Backtest
           </a>
           <a
             href="https://github.com/XinnBlueBird/alphaforge-ai"

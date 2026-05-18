@@ -16,12 +16,12 @@ export async function POST(req: NextRequest) {
   const { messages } = (await req.json()) as { messages: ChatMessage[] };
 
   const apiBase = process.env.MIMO_API_BASE || "https://api.freemodel.dev/v1";
-  const apiKey = process.env.MIMO_API_KEY;
+  const apiKey = process.env.FREEMODEL_API_KEY || process.env.MIMO_API_KEY;
   const model = process.env.MIMO_MODEL || "mimo/mimo-v2.5-pro";
 
   if (!apiKey) {
     return new Response(
-      JSON.stringify({ error: "MIMO_API_KEY not configured on server." }),
+      JSON.stringify({ error: "API key not configured on server." }),
       { status: 500, headers: { "content-type": "application/json" } },
     );
   }
